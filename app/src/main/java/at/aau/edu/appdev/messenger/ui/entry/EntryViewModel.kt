@@ -1,4 +1,4 @@
-package at.aau.edu.appdev.messenger.entry
+package at.aau.edu.appdev.messenger.ui.entry
 
 import androidx.lifecycle.ViewModel
 

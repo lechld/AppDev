@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Messenger</string>
+    <string name="permission_hint">To connect to other users, please enable required permission inside settings.</string>
 </resources>
