@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
+import at.aau.edu.appdev.messenger.Environment
 import at.aau.edu.appdev.messenger.R
 import at.aau.edu.appdev.messenger.api.Client
 import at.aau.edu.appdev.messenger.databinding.FragmentRoomBinding
@@ -18,7 +19,7 @@ class RoomsFragment : Fragment() {
     private val viewModel by viewModels<RoomsViewModel> {
         viewModelFactory {
             initializer {
-                RoomsViewModel(Client.getInstance(requireContext()))
+                RoomsViewModel(Environment.getInstance(requireContext()).client)
             }
         }
     }

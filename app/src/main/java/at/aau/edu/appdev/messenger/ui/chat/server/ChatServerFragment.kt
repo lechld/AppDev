@@ -10,20 +10,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import at.aau.edu.appdev.messenger.Environment
 import at.aau.edu.appdev.messenger.R
-import at.aau.edu.appdev.messenger.api.Server
 import at.aau.edu.appdev.messenger.databinding.FragmentChatBinding
 import at.aau.edu.appdev.messenger.ui.chat.MessageAdapter
-import at.aau.edu.appdev.messenger.user.UserRepository
 
 class ChatServerFragment : Fragment() {
 
     private val viewModel by viewModels<ChatServerViewModel> {
         viewModelFactory {
             initializer {
+                val environment = Environment.getInstance(requireContext())
                 ChatServerViewModel(
-                    server = Server.getInstance(requireContext()),
-                    userRepository = UserRepository(requireContext())
+                    server = environment.server,
+                    userRepository = environment.userRepository
                 )
             }
         }

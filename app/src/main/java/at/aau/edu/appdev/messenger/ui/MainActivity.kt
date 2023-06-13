@@ -6,11 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.NavHostFragment
+import at.aau.edu.appdev.messenger.Environment
 import at.aau.edu.appdev.messenger.R
 import at.aau.edu.appdev.messenger.api.impl.REQUIRED_PERMISSIONS
 import at.aau.edu.appdev.messenger.databinding.ActivityMainBinding
 import at.aau.edu.appdev.messenger.permission.PermissionHandler
-import at.aau.edu.appdev.messenger.user.UserRepository
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel> {
         viewModelFactory {
             initializer {
-                MainViewModel(UserRepository(this@MainActivity))
+                MainViewModel(Environment.getInstance(this@MainActivity).userRepository)
             }
         }
     }

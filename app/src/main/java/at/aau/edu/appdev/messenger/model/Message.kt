@@ -1,7 +1,6 @@
 package at.aau.edu.appdev.messenger.model
 
 import android.graphics.Bitmap
-import at.aau.edu.appdev.messenger.user.User
 import java.time.OffsetDateTime
 
 sealed interface Message {
@@ -23,5 +22,5 @@ sealed interface Message {
         override val id: String,
         val bitmap: Bitmap,
         val text: String,
-    ): Message
+    ) : Message
 }
