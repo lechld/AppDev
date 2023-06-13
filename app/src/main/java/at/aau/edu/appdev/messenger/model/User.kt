@@ -3,13 +3,16 @@ package at.aau.edu.appdev.messenger.model
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import at.aau.edu.appdev.messenger.R
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class User(
     val id: String,
     val name: String,
     val color: UserColor,
 )
 
+@Serializable
 enum class UserColor(
     @StringRes val description: Int,
     @ColorRes val primary: Int,
