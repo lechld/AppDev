@@ -13,19 +13,18 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import at.aau.edu.appdev.messenger.R
 import at.aau.edu.appdev.messenger.api.Server
 import at.aau.edu.appdev.messenger.databinding.FragmentChatBinding
-import at.aau.edu.appdev.messenger.model.Message
 import at.aau.edu.appdev.messenger.ui.chat.MessageAdapter
-import at.aau.edu.appdev.messenger.user.User
-import at.aau.edu.appdev.messenger.user.UserColor
 import at.aau.edu.appdev.messenger.user.UserRepository
-import java.time.OffsetDateTime
 
 class ChatServerFragment : Fragment() {
 
     private val viewModel by viewModels<ChatServerViewModel> {
         viewModelFactory {
             initializer {
-                ChatServerViewModel(Server.getInstance(requireContext()))
+                ChatServerViewModel(
+                    server = Server.getInstance(requireContext()),
+                    userRepository = UserRepository(requireContext())
+                )
             }
         }
     }
@@ -71,10 +70,10 @@ class ChatServerFragment : Fragment() {
         binding.recycler.adapter = adapter
 
         viewModel.messages.observe(viewLifecycleOwner) { messages ->
-            adapter.submitList(messages)
+            adapter.submitList(messages) {
+                binding.recycler.smoothScrollToPosition(messages.size)
+            }
         }
-
-        adapter.submitList(getDummyData(user))
 
         binding.textInputLayout.setEndIconOnClickListener {
             viewModel.sendMessage(
@@ -84,6 +83,7 @@ class ChatServerFragment : Fragment() {
 
             // TODO: Maybe some spinner while it's sending?
             // Or let's set it as done immediatelly and let view model handle sending issues within a queue
+            binding.textInput.text?.clear()
         }
 
         binding.textInputLayout.setStartIconOnClickListener {
@@ -107,42 +107,5 @@ class ChatServerFragment : Fragment() {
             binding.recycler.isEnabled = false
             binding.recycler.alpha = 0.7f
         }
-    }
-
-    private fun getDummyData(user1: User): List<Message> {
-        val user2 = User("Emily", "user2", UserColor.VIOLET)
-
-        return listOf(
-            Message.Text(
-                user1,
-                OffsetDateTime.parse("2023-06-13T10:00:00Z"),
-                "1",
-                "Hello"
-            ),
-            Message.Text(
-                user2,
-                OffsetDateTime.parse("2023-06-13T10:02:00Z"),
-                "2",
-                "Hi John, how are you?"
-            ),
-            Message.Text(
-                user1,
-                OffsetDateTime.parse("2023-06-13T10:05:00Z"),
-                "3",
-                "I'm good, thanks! How about you?"
-            ),
-            Message.Text(
-                user2,
-                OffsetDateTime.parse("2023-06-13T10:07:00Z"),
-                "4",
-                "I'm doing well too."
-            ),
-            Message.Text(
-                user1,
-                OffsetDateTime.parse("2023-06-13T10:10:00Z"),
-                "5",
-                "That's great to hear!"
-            )
-        )
     }
 }

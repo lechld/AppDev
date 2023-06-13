@@ -1,5 +1,6 @@
 package at.aau.edu.appdev.messenger.model
 
+import android.graphics.Bitmap
 import at.aau.edu.appdev.messenger.user.User
 import java.time.OffsetDateTime
 
@@ -20,7 +21,7 @@ sealed interface Message {
         override val sender: User,
         override val time: OffsetDateTime,
         override val id: String,
-        // TODO: How to add bitmap data?
+        val bitmap: Bitmap,
         val text: String,
     ): Message
 }
