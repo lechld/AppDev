@@ -15,6 +15,7 @@ class MessageAdapter : ListAdapter<Message, MessageViewHolder>(Differ()) {
             is Message.Text -> {
                 R.layout.item_message
             }
+            else -> throw IllegalStateException("Need to implement showing of bitmap")
         }
     }
 

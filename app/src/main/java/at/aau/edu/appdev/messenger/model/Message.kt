@@ -16,5 +16,11 @@ sealed interface Message {
         val content: String,
     ) : Message
 
-    // TODO: Add other types we want to support
+    data class Drawing(
+        override val sender: User,
+        override val time: OffsetDateTime,
+        override val id: String,
+        // TODO: How to add bitmap data?
+        val text: String,
+    ): Message
 }
