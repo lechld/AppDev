@@ -52,13 +52,13 @@ class RoomsFragment : Fragment() {
 
         val adapter = RoomsAdapter { connection ->
             // TODO: Not sure if we want to pass connection here or not. If not we can remove click handler from adapter
-            navController.navigate(R.id.chat_server)
+            navController.navigate(R.id.chat_client)
         }
 
         binding.recycler.adapter = adapter
 
         binding.addRoomButton.setOnClickListener {
-            navController.navigate(R.id.chat_client)
+            navController.navigate(R.id.chat_server)
         }
 
         viewModel.rooms.observe(viewLifecycleOwner) { connections ->

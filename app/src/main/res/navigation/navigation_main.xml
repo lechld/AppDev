@@ -19,13 +19,13 @@
 
     <fragment
         android:id="@+id/chat_server"
-        android:name="at.aau.edu.appdev.messenger.ui.server.ChatServerFragment"
+        android:name="at.aau.edu.appdev.messenger.ui.chat.server.ChatServerFragment"
         android:label="Chat"
         tools:layout="@layout/fragment_chat" />
 
     <fragment
         android:id="@+id/chat_client"
-        android:name="at.aau.edu.appdev.messenger.ui.client.ChatClientFragment"
+        android:name="at.aau.edu.appdev.messenger.ui.chat.client.ChatClientFragment"
         android:label="Chat"
         tools:layout="@layout/fragment_chat" />
 

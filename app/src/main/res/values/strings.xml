@@ -3,4 +3,5 @@
     <string name="permission_hint">To connect to other users, please enable required permission inside settings.</string>
     <string name="name">Name</string>
     <string name="save">Save</string>
+    <string name="new_message">New message</string>
 </resources>
