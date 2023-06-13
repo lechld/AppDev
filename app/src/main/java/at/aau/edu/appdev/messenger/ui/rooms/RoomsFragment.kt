@@ -11,7 +11,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
 import at.aau.edu.appdev.messenger.Environment
 import at.aau.edu.appdev.messenger.R
-import at.aau.edu.appdev.messenger.api.Client
 import at.aau.edu.appdev.messenger.databinding.FragmentRoomBinding
 
 class RoomsFragment : Fragment() {
@@ -64,6 +63,12 @@ class RoomsFragment : Fragment() {
 
         viewModel.rooms.observe(viewLifecycleOwner) { connections ->
             adapter.submitList(connections)
+        }
+
+        binding.animation.playAnimation()
+
+        viewModel.jokes.observe(viewLifecycleOwner){ joke ->
+            binding.joke.text = joke
         }
     }
 }

@@ -1,5 +1,6 @@
 package at.aau.edu.appdev.messenger.ui.chat
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +10,8 @@ import at.aau.edu.appdev.messenger.databinding.ItemDrawingBinding
 import at.aau.edu.appdev.messenger.databinding.ItemMessageBinding
 import at.aau.edu.appdev.messenger.model.Message
 
-class MessageAdapter : ListAdapter<Message, MessageViewHolder>(Differ()) {
+class MessageAdapter(private val context: Context) :
+    ListAdapter<Message, MessageViewHolder>(Differ()) {
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
@@ -29,13 +31,13 @@ class MessageAdapter : ListAdapter<Message, MessageViewHolder>(Differ()) {
             R.layout.item_message -> {
                 val binding = ItemMessageBinding.inflate(inflater, parent, false)
 
-                MessageViewHolder.TextViewHolder(binding)
+                MessageViewHolder.TextViewHolder(binding, context)
             }
 
             R.layout.item_drawing -> {
                 val binding = ItemDrawingBinding.inflate(inflater, parent, false)
 
-                MessageViewHolder.DrawingViewHolder(binding)
+                MessageViewHolder.DrawingViewHolder(binding, context)
             }
 
             else -> throw IllegalStateException("invalid view type!")
