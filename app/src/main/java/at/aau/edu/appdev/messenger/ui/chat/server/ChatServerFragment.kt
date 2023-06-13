@@ -62,9 +62,6 @@ class ChatServerFragment : Fragment() {
 
     private fun setupUi() {
         val binding = this.binding ?: return
-        val context = this.context ?: return
-        val user = UserRepository(context).getUser() ?: return
-
         val adapter = MessageAdapter()
 
         binding.recycler.adapter = adapter
@@ -81,9 +78,8 @@ class ChatServerFragment : Fragment() {
                 binding.textInput.text?.toString()
             )
 
-            // TODO: Maybe some spinner while it's sending?
-            // Or let's set it as done immediatelly and let view model handle sending issues within a queue
             binding.textInput.text?.clear()
+            disableDrawingMode()
         }
 
         binding.textInputLayout.setStartIconOnClickListener {
@@ -96,16 +92,28 @@ class ChatServerFragment : Fragment() {
         val enabled = binding.drawingView.isVisible
 
         if (enabled) {
-            binding.textInputLayout.startIconDrawable = brushIcon
-            binding.drawingView.isVisible = false
-            binding.drawingView.reset()
-            binding.recycler.isEnabled = true
-            binding.recycler.alpha = 1f
+            disableDrawingMode()
         } else {
-            binding.textInputLayout.startIconDrawable = closeIcon
-            binding.drawingView.isVisible = true
-            binding.recycler.isEnabled = false
-            binding.recycler.alpha = 0.7f
+            enableDrawingMode()
         }
+    }
+
+    private fun enableDrawingMode() {
+        val binding = this.binding ?: return
+
+        binding.textInputLayout.startIconDrawable = closeIcon
+        binding.drawingView.isVisible = true
+        binding.recycler.isEnabled = false
+        binding.recycler.alpha = 0.7f
+    }
+
+    private fun disableDrawingMode() {
+        val binding = this.binding ?: return
+
+        binding.textInputLayout.startIconDrawable = brushIcon
+        binding.drawingView.isVisible = false
+        binding.drawingView.reset()
+        binding.recycler.isEnabled = true
+        binding.recycler.alpha = 1f
     }
 }

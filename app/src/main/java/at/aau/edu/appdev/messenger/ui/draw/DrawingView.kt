@@ -40,6 +40,10 @@ class DrawingView @JvmOverloads constructor(
         if (visibility == GONE || visibility == INVISIBLE) {
             return null
         }
+        if (paths.isEmpty()) {
+            return null
+        }
+
         val imageBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(imageBitmap)
 

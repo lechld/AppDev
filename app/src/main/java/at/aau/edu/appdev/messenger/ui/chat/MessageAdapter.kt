@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import at.aau.edu.appdev.messenger.R
+import at.aau.edu.appdev.messenger.databinding.ItemDrawingBinding
 import at.aau.edu.appdev.messenger.databinding.ItemMessageBinding
 import at.aau.edu.appdev.messenger.model.Message
 
@@ -15,7 +16,9 @@ class MessageAdapter : ListAdapter<Message, MessageViewHolder>(Differ()) {
             is Message.Text -> {
                 R.layout.item_message
             }
-            else -> throw IllegalStateException("Need to implement showing of bitmap")
+            is Message.Drawing -> {
+                R.layout.item_drawing
+            }
         }
     }
 
@@ -29,6 +32,12 @@ class MessageAdapter : ListAdapter<Message, MessageViewHolder>(Differ()) {
                 MessageViewHolder.TextViewHolder(binding)
             }
 
+            R.layout.item_drawing -> {
+                val binding = ItemDrawingBinding.inflate(inflater, parent, false)
+
+                MessageViewHolder.DrawingViewHolder(binding)
+            }
+
             else -> throw IllegalStateException("invalid view type!")
         }
     }
@@ -39,6 +48,10 @@ class MessageAdapter : ListAdapter<Message, MessageViewHolder>(Differ()) {
         when (holder) {
             is MessageViewHolder.TextViewHolder -> {
                 holder.bind(item as Message.Text)
+            }
+
+            is MessageViewHolder.DrawingViewHolder -> {
+                holder.bind(item as Message.Drawing)
             }
         }
     }
