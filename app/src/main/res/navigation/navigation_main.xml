@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/entry"
-        android:name="at.aau.edu.appdev.messenger.entry.EntryFragment"
+        android:name="at.aau.edu.appdev.messenger.ui.entry.EntryFragment"
         android:label="Hello"
         tools:layout="@layout/fragment_entry" />
 
