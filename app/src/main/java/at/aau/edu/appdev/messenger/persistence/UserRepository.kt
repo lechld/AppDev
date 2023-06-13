@@ -1,7 +1,8 @@
-package at.aau.edu.appdev.messenger.user
+package at.aau.edu.appdev.messenger.persistence
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
+import at.aau.edu.appdev.messenger.model.User
+import at.aau.edu.appdev.messenger.model.UserColor
 import java.util.UUID
 
 private const val USER_PREFS_NAME = "messenger_user_prefs"
@@ -11,7 +12,7 @@ private const val USER_COLOR_KEY = "messenger_user_color"
 
 class UserRepository(context: Context) {
 
-    private val prefs = context.getSharedPreferences(USER_PREFS_NAME, MODE_PRIVATE)
+    private val prefs = context.getSharedPreferences(USER_PREFS_NAME, Context.MODE_PRIVATE)
 
     fun getUser(): User? {
         val id = prefs.getString(USER_ID_KEY, null) ?: return null

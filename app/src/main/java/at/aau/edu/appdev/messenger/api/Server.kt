@@ -3,7 +3,7 @@ package at.aau.edu.appdev.messenger.api
 import android.content.Context
 import at.aau.edu.appdev.messenger.api.impl.ServerImpl
 import at.aau.edu.appdev.messenger.api.model.ServerConnection
-import at.aau.edu.appdev.messenger.user.UserRepository
+import at.aau.edu.appdev.messenger.persistence.UserRepository
 import com.google.android.gms.nearby.Nearby
 import kotlinx.coroutines.flow.Flow
 

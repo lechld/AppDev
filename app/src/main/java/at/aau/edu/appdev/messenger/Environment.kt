@@ -3,7 +3,7 @@ package at.aau.edu.appdev.messenger
 import android.content.Context
 import at.aau.edu.appdev.messenger.api.Client
 import at.aau.edu.appdev.messenger.api.Server
-import at.aau.edu.appdev.messenger.user.UserRepository
+import at.aau.edu.appdev.messenger.persistence.UserRepository
 
 /**
  * Our Dependency Injection tool. Currently only holds singletons across the application

@@ -12,8 +12,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
 import at.aau.edu.appdev.messenger.Environment
 import at.aau.edu.appdev.messenger.databinding.FragmentUserBinding
-import at.aau.edu.appdev.messenger.user.UserColor
-import at.aau.edu.appdev.messenger.user.UserRepository
+import at.aau.edu.appdev.messenger.model.UserColor
 
 class UserFragment : Fragment() {
 

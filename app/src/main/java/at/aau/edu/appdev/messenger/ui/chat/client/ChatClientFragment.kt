@@ -10,7 +10,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import at.aau.edu.appdev.messenger.api.Client
 import at.aau.edu.appdev.messenger.databinding.FragmentChatBinding
-import at.aau.edu.appdev.messenger.user.UserRepository
+import at.aau.edu.appdev.messenger.persistence.UserRepository
 
 class ChatClientFragment : Fragment() {
 
