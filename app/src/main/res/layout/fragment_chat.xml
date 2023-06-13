@@ -15,6 +15,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <at.aau.edu.appdev.messenger.ui.draw.DrawingView
+        android:id="@+id/drawing_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#FFFFFF"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/text_input_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout"
         android:layout_width="match_parent"
@@ -23,7 +34,7 @@
         app:endIconDrawable="@drawable/send_black_24dp"
         app:endIconMode="custom"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:startIconDrawable="@drawable/add_black_24dp">
+        app:startIconDrawable="@drawable/brush">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input"
