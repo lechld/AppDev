@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import at.aau.edu.appdev.messenger.Environment
 import at.aau.edu.appdev.messenger.api.Server
 import at.aau.edu.appdev.messenger.databinding.FragmentChatBinding
 
@@ -16,7 +17,7 @@ class ChatServerFragment : Fragment() {
     private val viewModel by viewModels<ChatServerViewModel> {
         viewModelFactory {
             initializer {
-                ChatServerViewModel(Server.getInstance(requireContext()))
+                ChatServerViewModel(Environment.getInstance(requireContext()).server)
             }
         }
     }

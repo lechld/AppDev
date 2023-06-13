@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class ClientImpl(
     private val connectionsClient: ConnectionsClient,
-    private val userIdentifier: String = GENERATED_NAME,
+    private val userIdentifier: String,
     private val applicationIdentifier: String = BuildConfig.APPLICATION_ID,
     private val messageDelegate: MessageDelegate = MessageDelegate(connectionsClient),
 ) : Client,

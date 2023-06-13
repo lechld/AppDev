@@ -22,11 +22,11 @@ class ChatServerViewModel(
 
     init {
         // TODO: Remove
-        _messages.postValue(getDummyData(userRepository.getUser()!!))
+        _messages.postValue(getDummyData(userRepository.enforceUser()))
     }
 
     fun sendMessage(bitmap: Bitmap?, text: String?) {
-        val user = userRepository.getUser() ?: throw IllegalStateException("User must be given!")
+        val user = userRepository.enforceUser()
         if (text.isNullOrEmpty() && bitmap == null) {
             return
         }
