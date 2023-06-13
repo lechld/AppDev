@@ -1,14 +1,27 @@
 package at.aau.edu.appdev.messenger.ui
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.fragment.NavHostFragment
 import at.aau.edu.appdev.messenger.R
 import at.aau.edu.appdev.messenger.api.impl.REQUIRED_PERMISSIONS
 import at.aau.edu.appdev.messenger.databinding.ActivityMainBinding
 import at.aau.edu.appdev.messenger.permission.PermissionHandler
+import at.aau.edu.appdev.messenger.user.UserRepository
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel by viewModels<MainViewModel> {
+        viewModelFactory {
+            initializer {
+                MainViewModel(UserRepository(this@MainActivity))
+            }
+        }
+    }
 
     private lateinit var binding: ActivityMainBinding
 
@@ -19,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupPermissionHandler()
+        setupNavigation()
     }
 
     private fun setupPermissionHandler() {
@@ -27,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             permissions = REQUIRED_PERMISSIONS
         ) { permissions ->
             val anyDenied = permissions.any { !it.value }
-            if (anyDenied) {
+            if (!anyDenied) {
                 return@PermissionHandler
             }
 
@@ -39,5 +53,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         lifecycle.addObserver(permissionHandler)
+    }
+
+    private fun setupNavigation() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        viewModel.openSettings.observe(this) { openSettings ->
+            if (openSettings) {
+                navController.navigate(R.id.user)
+            }
+        }
     }
 }

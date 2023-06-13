@@ -3,12 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_main"
-    app:startDestination="@id/entry">
+    app:startDestination="@id/rooms">
 
     <fragment
-        android:id="@+id/entry"
-        android:name="at.aau.edu.appdev.messenger.ui.entry.EntryFragment"
+        android:id="@+id/user"
+        android:name="at.aau.edu.appdev.messenger.ui.user.UserFragment"
         android:label="Hello"
-        tools:layout="@layout/fragment_entry" />
+        tools:layout="@layout/fragment_user" />
+
+    <fragment
+        android:id="@+id/rooms"
+        android:name="at.aau.edu.appdev.messenger.ui.rooms.RoomsFragment"
+        android:label="Rooms"
+        tools:layout="@layout/fragment_room" />
+
+    <fragment
+        android:id="@+id/chat_server"
+        android:name="at.aau.edu.appdev.messenger.ui.server.ChatServerFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat" />
+
+    <fragment
+        android:id="@+id/chat_client"
+        android:name="at.aau.edu.appdev.messenger.ui.client.ChatClientFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat" />
 
 </navigation>
