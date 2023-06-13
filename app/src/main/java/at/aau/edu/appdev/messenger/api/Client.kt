@@ -3,6 +3,7 @@ package at.aau.edu.appdev.messenger.api
 import android.content.Context
 import at.aau.edu.appdev.messenger.api.impl.ClientImpl
 import at.aau.edu.appdev.messenger.api.model.ClientConnection
+import at.aau.edu.appdev.messenger.persistence.UserRepository
 import com.google.android.gms.nearby.Nearby
 import kotlinx.coroutines.flow.Flow
 
@@ -18,7 +19,7 @@ interface Client : MessageSender, MessageReceiver {
     companion object {
         private var instance: Client? = null
 
-        fun getInstance(context: Context): Client {
+        fun getInstance(context: Context, userRepository: UserRepository): Client {
             val instance = instance
 
             if (instance != null) {
@@ -26,7 +27,8 @@ interface Client : MessageSender, MessageReceiver {
             }
 
             val newInstance = ClientImpl(
-                connectionsClient = Nearby.getConnectionsClient(context)
+                connectionsClient = Nearby.getConnectionsClient(context),
+                userIdentifier = userRepository.enforceUser().name
             )
 
             Companion.instance = newInstance

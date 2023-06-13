@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import at.aau.edu.appdev.messenger.R
 import at.aau.edu.appdev.messenger.databinding.ListItemColorBinding
-import at.aau.edu.appdev.messenger.user.UserColor
+import at.aau.edu.appdev.messenger.model.UserColor
 
 class ColorAdapter(
     private val context: Context,

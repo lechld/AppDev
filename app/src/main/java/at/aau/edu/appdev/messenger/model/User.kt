@@ -1,4 +1,4 @@
-package at.aau.edu.appdev.messenger.user
+package at.aau.edu.appdev.messenger.model
 
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
