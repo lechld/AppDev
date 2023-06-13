@@ -61,4 +61,18 @@
     <color name="md_theme_dark_surfaceTint">#D0BCFF</color>
     <color name="md_theme_dark_outlineVariant">#49454F</color>
     <color name="md_theme_dark_scrim">#000000</color>
+    <color name="message_onGreen">#8db600</color>
+    <color name="message_green">#ebffa5</color>
+    <color name="message_onViolet">#873260</color>
+    <color name="message_violet">#db9dbe</color>
+    <color name="message_onOrange">#cc5500</color>
+    <color name="message_orange">#ffa361</color>
+    <color name="message_onGrey">#36454f</color>
+    <color name="message_grey">#afbec8</color>
+    <color name="message_onBlue">#21abcd</color>
+    <color name="message_blue">#c6ecf6</color>
+    <color name="message_onYellow">#ffbf00</color>
+    <color name="message_yellow">#ffe598</color>
+    <color name="white">#ffffff</color>
+
 </resources>
