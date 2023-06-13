@@ -13,6 +13,7 @@ import at.aau.edu.appdev.messenger.databinding.FragmentChatBinding
 import at.aau.edu.appdev.messenger.model.Message
 import at.aau.edu.appdev.messenger.ui.chat.MessageAdapter
 import at.aau.edu.appdev.messenger.user.User
+import at.aau.edu.appdev.messenger.user.UserColor
 import at.aau.edu.appdev.messenger.user.UserRepository
 import java.time.OffsetDateTime
 
@@ -73,7 +74,7 @@ class ChatServerFragment : Fragment() {
     }
 
     private fun getDummyData(user1: User): List<Message> {
-        val user2 = User("Emily", "user2")
+        val user2 = User("Emily", "user2", UserColor.VIOLET)
 
         return listOf(
             Message.Text(

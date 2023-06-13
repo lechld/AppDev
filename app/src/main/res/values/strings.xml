@@ -4,4 +4,15 @@
     <string name="name">Name</string>
     <string name="save">Save</string>
     <string name="new_message">New message</string>
+    <string name="color">Color</string>
+    <string name="baby_computer_bad_joke">What does a baby computer call its father? Data.</string>
+    <string name="name_requirement_description">How would you like to be called?</string>
+    <string name="color_requirement_description">Tell us your favourite color. It will be used later on for your messages.</string>
+    <string name="Green">Green</string>
+    <string name="Violet">Violet</string>
+    <string name="Orange">Orange</string>
+    <string name="Grey">Grey</string>
+    <string name="Blue">Blue</string>
+    <string name="Yellow">Yellow</string>
+
 </resources>
