@@ -12,8 +12,8 @@ data class User(
 
 enum class UserColor(
     @StringRes val description: Int,
-    @ColorRes val primary: Int,
-    @ColorRes val secondary: Int
+    @ColorRes val secondary: Int,
+    @ColorRes val primary: Int
 ) {
     GREEN(R.string.Green, R.color.message_green, R.color.message_onGreen),
     VIOLET(R.string.Violet, R.color.message_violet, R.color.message_onViolet),

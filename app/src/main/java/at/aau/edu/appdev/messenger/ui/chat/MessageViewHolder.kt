@@ -1,6 +1,8 @@
 package at.aau.edu.appdev.messenger.ui.chat
 
+import android.content.Context
 import android.graphics.Bitmap
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -18,17 +20,26 @@ sealed class MessageViewHolder(
 
     class TextViewHolder(
         private val binding: ItemMessageBinding,
+        private val context: Context
     ) : MessageViewHolder(binding) {
 
         fun bind(item: Message.Text) {
             binding.time.text = TIME_FORMATTER.format(item.time)
             binding.header.text = item.sender.name
             binding.content.text = item.content
+            binding.header.setTextColor(context.getColor(item.sender.color.primary))
+            binding.headerContainer.background =
+                AppCompatResources.getDrawable(context, item.sender.color.secondary)
+            binding.headerContainerContainer.background =
+                AppCompatResources.getDrawable(context, item.sender.color.primary)
+            binding.contentContainerContainer.background =
+                AppCompatResources.getDrawable(context, item.sender.color.primary)
         }
     }
 
     class DrawingViewHolder(
         private val binding: ItemDrawingBinding,
+        private val context: Context
     ) : MessageViewHolder(binding) {
 
         fun bind(item: Message.Drawing) {
@@ -44,6 +55,13 @@ sealed class MessageViewHolder(
             binding.header.text = item.sender.name
             binding.content.text = item.text
             binding.content.isVisible = item.text.isNotEmpty()
+            binding.header.setTextColor(context.getColor(item.sender.color.primary))
+            binding.headerContainer.background =
+                AppCompatResources.getDrawable(context, item.sender.color.secondary)
+            binding.headerContainerContainer.background =
+                AppCompatResources.getDrawable(context, item.sender.color.primary)
+            binding.contentContainerContainer.background =
+                AppCompatResources.getDrawable(context, item.sender.color.primary)
         }
     }
 }
