@@ -61,7 +61,7 @@ class RoomsFragment : Fragment() {
             navController.navigate(R.id.chat_server)
         }
 
-        viewModel.rooms.observe(viewLifecycleOwner) { connections ->
+        viewModel.rooms?.observe(viewLifecycleOwner) { connections ->
             adapter.submitList(connections)
         }
 
