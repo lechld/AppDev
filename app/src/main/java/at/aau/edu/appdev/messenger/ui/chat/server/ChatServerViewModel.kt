@@ -1,36 +1,51 @@
 package at.aau.edu.appdev.messenger.ui.chat.server
 
-import android.graphics.Bitmap
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.aau.edu.appdev.messenger.api.Server
-import at.aau.edu.appdev.messenger.api.model.ClientConnection
 import at.aau.edu.appdev.messenger.api.model.ServerConnection
-import at.aau.edu.appdev.messenger.model.Message
 import at.aau.edu.appdev.messenger.model.MessageEvent
 import at.aau.edu.appdev.messenger.model.User
-import at.aau.edu.appdev.messenger.model.UserColor
 import at.aau.edu.appdev.messenger.persistence.UserRepository
+import at.aau.edu.appdev.messenger.ui.chat.ChatFragmentViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
-import java.util.UUID
 
 class ChatServerViewModel(
     private val server: Server,
-    private val userRepository: UserRepository,
-) : ViewModel() {
-
-    private val _messages = MutableLiveData<List<Message>>()
-    val messages: LiveData<List<Message>> = _messages
+    userRepository: UserRepository,
+) : ChatFragmentViewModel(userRepository) {
 
     init {
-        // TODO: Remove
-        _messages.postValue(getDummyData(userRepository.enforceUser()))
+        registerUserEvents()
+        collectEvents()
+    }
 
+    override fun collectEvents() {
         viewModelScope.launch {
-            server.messages
+            server.messages.collect { messageEvent ->
+                // Forward content events to other users
+                if (messageEvent is MessageEvent.Content) {
+                    val connections = server.getConnectionsSync()
+                        .filterIsInstance(ServerConnection.Connected::class.java)
+                        /**
+                         * TODO: That's hack, other users with same name won't see the message!
+                         *
+                         * Options to solve:
+                         * - Handshake like mechanism - Exchange data at least the server side needs.
+                         * - Add field `endpointId` to user, don't update id like we do now.
+                         * - Rethink connection protocol
+                         *
+                         * Currently it's not worth to do for a throw away project.
+                         */
+                        .filter { it.user.name != messageEvent.message.sender.name }
+
+                    connections.forEach { connection ->
+                        server.send(connection, messageEvent)
+                    }
+                }
+
+                addEvent(messageEvent)
+            }
         }
     }
 
@@ -42,87 +57,44 @@ class ChatServerViewModel(
         server.stopBroadcasting()
     }
 
-    fun sendMessage(bitmap: Bitmap?, text: String?) {
-        val user = userRepository.enforceUser()
-        if (text.isNullOrEmpty() && bitmap == null) {
-            return
-        }
-        val id = UUID.randomUUID().toString()
-        val now = OffsetDateTime.now()
-        val content = text ?: ""
-
-        val message = if (bitmap != null) {
-            Message.Drawing(
-                sender = user,
-                time = now,
-                id = id,
-                bitmap = resizeBitmap(bitmap),
-                text = content
-            )
-        } else {
-            Message.Text(
-                sender = user,
-                time = now,
-                id = id,
-                content = content
-            )
-        }
-
-        val currentMessages = messages.value ?: emptyList()
-        val newMessages = mutableListOf<Message>()
-
-        newMessages.addAll(currentMessages)
-        newMessages.add(message)
-
-        // TODO: Send via server to other users
-
-        _messages.postValue(newMessages)
+    override fun sendEvent(event: MessageEvent) {
+        server.getConnectionsSync().filterIsInstance(ServerConnection.Connected::class.java)
+            .forEach { connection ->
+                viewModelScope.launch(Dispatchers.IO) {
+                    server.send(connection, event)
+                }
+            }
     }
 
-    private fun resizeBitmap(bitmap: Bitmap): Bitmap {
-        val ratio = bitmap.width.toFloat() / bitmap.height.toFloat()
-        val width = 150f
-        val height = (width / ratio)
+    private fun registerUserEvents() {
+        viewModelScope.launch {
+            val inRoom = mutableListOf<User>()
 
-        return Bitmap.createScaledBitmap(
-            bitmap, width.toInt(), height.toInt(), false
-        )
-    }
+            server.connections.collect { newConnections ->
+                val connectionFailure =
+                    newConnections.filterIsInstance(ServerConnection.Failure::class.java)
+                        .map { it.user }
+                val lostUsers = inRoom.filter { connectionFailure.contains(it) }
+                val lostUserEvents = lostUsers.map { MessageEvent.UserLeft(it) }
 
-    private fun getDummyData(user1: User): List<Message> {
-        val user2 = User("Emily", "user2", UserColor.VIOLET)
+                val connectionSuccess =
+                    newConnections.filterIsInstance(ServerConnection.Connected::class.java)
+                val connectionSuccessUsers = connectionSuccess.map { it.user }
+                val newUsers = connectionSuccessUsers.filter { !inRoom.contains(it) }
+                val joinedUserEvents = newUsers.map { MessageEvent.UserJoined(it) }
 
-        return listOf(
-            Message.Text(
-                user1,
-                OffsetDateTime.parse("2023-06-13T10:00:00Z"),
-                "1",
-                "Hello"
-            ),
-            Message.Text(
-                user2,
-                OffsetDateTime.parse("2023-06-13T10:02:00Z"),
-                "2",
-                "Hi John, how are you?"
-            ),
-            Message.Text(
-                user1,
-                OffsetDateTime.parse("2023-06-13T10:05:00Z"),
-                "3",
-                "I'm good, thanks! How about you?"
-            ),
-            Message.Text(
-                user2,
-                OffsetDateTime.parse("2023-06-13T10:07:00Z"),
-                "4",
-                "I'm doing well too."
-            ),
-            Message.Text(
-                user1,
-                OffsetDateTime.parse("2023-06-13T10:10:00Z"),
-                "5",
-                "That's great to hear!"
-            )
-        )
+                inRoom.removeAll(lostUsers)
+                inRoom.addAll(newUsers)
+
+                lostUserEvents.forEach { event ->
+                    sendEvent(event)
+                    addEvent(event)
+                }
+                joinedUserEvents.forEach { event ->
+                    sendEvent(event)
+                    addEvent(event)
+                }
+            }
+        }
     }
 }

@@ -14,6 +14,7 @@ import at.aau.edu.appdev.messenger.R
 import at.aau.edu.appdev.messenger.api.Server
 import at.aau.edu.appdev.messenger.databinding.FragmentChatBinding
 import at.aau.edu.appdev.messenger.persistence.UserRepository
+import at.aau.edu.appdev.messenger.ui.chat.ChatFragmentDelegate
 import at.aau.edu.appdev.messenger.ui.chat.MessageAdapter
 
 class ChatServerFragment : Fragment() {
@@ -31,14 +32,6 @@ class ChatServerFragment : Fragment() {
     }
 
     private var binding: FragmentChatBinding? = null
-
-    private val closeIcon by lazy {
-        ContextCompat.getDrawable(requireContext(), R.drawable.close)
-    }
-
-    private val brushIcon by lazy {
-        ContextCompat.getDrawable(requireContext(), R.drawable.brush)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,58 +66,8 @@ class ChatServerFragment : Fragment() {
 
     private fun setupUi() {
         val binding = this.binding ?: return
-        val adapter = MessageAdapter()
+        val delegate = ChatFragmentDelegate(binding)
 
-        binding.recycler.adapter = adapter
-
-        viewModel.messages.observe(viewLifecycleOwner) { messages ->
-            adapter.submitList(messages) {
-                binding.recycler.smoothScrollToPosition(messages.size)
-            }
-        }
-
-        binding.textInputLayout.setEndIconOnClickListener {
-            viewModel.sendMessage(
-                binding.drawingView.getBitmap(),
-                binding.textInput.text?.toString()
-            )
-
-            binding.textInput.text?.clear()
-            disableDrawingMode()
-        }
-
-        binding.textInputLayout.setStartIconOnClickListener {
-            toggleDrawingMode()
-        }
-    }
-
-    private fun toggleDrawingMode() {
-        val binding = this.binding ?: return
-        val enabled = binding.drawingView.isVisible
-
-        if (enabled) {
-            disableDrawingMode()
-        } else {
-            enableDrawingMode()
-        }
-    }
-
-    private fun enableDrawingMode() {
-        val binding = this.binding ?: return
-
-        binding.textInputLayout.startIconDrawable = closeIcon
-        binding.drawingView.isVisible = true
-        binding.recycler.isEnabled = false
-        binding.recycler.alpha = 0.7f
-    }
-
-    private fun disableDrawingMode() {
-        val binding = this.binding ?: return
-
-        binding.textInputLayout.startIconDrawable = brushIcon
-        binding.drawingView.isVisible = false
-        binding.drawingView.reset()
-        binding.recycler.isEnabled = true
-        binding.recycler.alpha = 1f
+        delegate.setup(viewLifecycleOwner, viewModel)
     }
 }

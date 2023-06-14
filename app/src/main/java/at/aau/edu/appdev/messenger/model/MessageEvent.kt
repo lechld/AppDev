@@ -12,6 +12,9 @@ sealed class MessageEvent {
     data class UserLeft(val user: User) : MessageEvent()
 
     @Serializable
+    object Empty: MessageEvent()
+
+    @Serializable
     object RoomClosed : MessageEvent()
 
     @Serializable

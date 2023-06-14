@@ -11,14 +11,17 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import at.aau.edu.appdev.messenger.api.Client
 import at.aau.edu.appdev.messenger.databinding.FragmentChatBinding
 import at.aau.edu.appdev.messenger.persistence.UserRepository
+import at.aau.edu.appdev.messenger.ui.chat.ChatFragmentDelegate
 
 class ChatClientFragment : Fragment() {
 
     private val viewModel by viewModels<ChatClientViewModel> {
         viewModelFactory {
             initializer {
+                val userRepo = UserRepository(requireContext())
                 ChatClientViewModel(
-                    Client.getInstance(requireContext(), UserRepository(requireContext()).getUser())
+                    client = Client.getInstance(requireContext(), userRepo.getUser()),
+                    userRepository = userRepo,
                 )
             }
         }
@@ -48,6 +51,9 @@ class ChatClientFragment : Fragment() {
     }
 
     private fun setupUi() {
+        val binding = this.binding ?: return
+        val delegate = ChatFragmentDelegate(binding)
 
+        delegate.setup(viewLifecycleOwner, viewModel)
     }
 }
