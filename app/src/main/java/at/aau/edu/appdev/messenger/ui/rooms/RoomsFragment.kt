@@ -59,7 +59,7 @@ class RoomsFragment : Fragment() {
         val navController = findNavController()
 
         val adapter = RoomsAdapter { connection ->
-            // TODO: Not sure if we want to pass connection here or not. If not we can remove click handler from adapter
+            viewModel.connect(connection)
             navController.navigate(R.id.chat_client)
         }
 

@@ -39,4 +39,8 @@ class RoomsViewModel(
         delay(5000)
         updateJoke()
     }
+
+    fun connect(connection: Connection) {
+        client?.connect(connection as ClientConnection)
+    }
 }

@@ -17,6 +17,26 @@ class ChatServerViewModel(
 
     init {
         registerUserEvents()
+        collectEvents()
+    }
+
+    override fun collectEvents() {
+        viewModelScope.launch {
+            server.messages.collect { messageEvent ->
+                // Forward content events to other users
+                if (messageEvent is MessageEvent.Content) {
+                    val connections = server.getConnectionsSync()
+                        .filterIsInstance(ServerConnection.Connected::class.java)
+                        .filter { it.user != messageEvent.message.sender }
+
+                    connections.forEach { connection ->
+                        server.send(connection, messageEvent)
+                    }
+                }
+
+                addEvent(messageEvent)
+            }
+        }
     }
 
     fun startBroadcasting() {

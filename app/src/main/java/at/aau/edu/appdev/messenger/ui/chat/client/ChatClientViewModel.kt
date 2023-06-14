@@ -14,6 +14,18 @@ class ChatClientViewModel(
     userRepository: UserRepository,
 ) : ChatFragmentViewModel(userRepository) {
 
+    init {
+        collectEvents()
+    }
+
+    override fun collectEvents() {
+        viewModelScope.launch {
+            client.messages.collect {
+                addEvent(it)
+            }
+        }
+    }
+
     override fun sendEvent(event: MessageEvent) {
         client.connectionsSync().filterIsInstance(ClientConnection.Connected::class.java)
             .forEach { connection ->
