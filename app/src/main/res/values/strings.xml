@@ -15,7 +15,7 @@
     <string name="Blue">Blue</string>
     <string name="Yellow">Yellow</string>
     <string name="received_image">Received image</string>
-    <string name="enjoy_jokes">We know waiting sucks…\n ...so enjoy some jokes:</string>
-    <string name="new_lobby">…or make a new lobby!</string>
+    <string name="enjoy_jokes">We know waiting sucks…\n …so enjoy some jokes:</string>
+    <string name="new_lobby">…or create a new lobby!</string>
 
 </resources>
