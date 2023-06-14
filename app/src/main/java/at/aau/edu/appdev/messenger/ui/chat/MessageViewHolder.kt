@@ -18,9 +18,10 @@ sealed class MessageViewHolder(
     binding: ViewBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
+    protected val context: Context = binding.root.context
+
     class TextViewHolder(
         private val binding: ItemMessageBinding,
-        private val context: Context
     ) : MessageViewHolder(binding) {
 
         fun bind(item: Message.Text) {
@@ -39,7 +40,6 @@ sealed class MessageViewHolder(
 
     class DrawingViewHolder(
         private val binding: ItemDrawingBinding,
-        private val context: Context
     ) : MessageViewHolder(binding) {
 
         fun bind(item: Message.Drawing) {
