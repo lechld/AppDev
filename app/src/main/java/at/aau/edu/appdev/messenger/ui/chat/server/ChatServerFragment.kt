@@ -10,9 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import at.aau.edu.appdev.messenger.Environment
 import at.aau.edu.appdev.messenger.R
+import at.aau.edu.appdev.messenger.api.Server
 import at.aau.edu.appdev.messenger.databinding.FragmentChatBinding
+import at.aau.edu.appdev.messenger.persistence.UserRepository
 import at.aau.edu.appdev.messenger.ui.chat.MessageAdapter
 
 class ChatServerFragment : Fragment() {
@@ -20,10 +21,10 @@ class ChatServerFragment : Fragment() {
     private val viewModel by viewModels<ChatServerViewModel> {
         viewModelFactory {
             initializer {
-                val environment = Environment.getInstance(requireContext())
+                val userRepo = UserRepository(requireContext())
                 ChatServerViewModel(
-                    server = environment.server,
-                    userRepository = environment.userRepository
+                    server = Server.getInstance(requireContext(), userRepo.getUser()),
+                    userRepository = userRepo,
                 )
             }
         }
@@ -37,6 +38,11 @@ class ChatServerFragment : Fragment() {
 
     private val brushIcon by lazy {
         ContextCompat.getDrawable(requireContext(), R.drawable.brush)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.startBroadcasting()
     }
 
     override fun onCreateView(
@@ -58,6 +64,11 @@ class ChatServerFragment : Fragment() {
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        viewModel.stopBroadcasting()
+        super.onDestroy()
     }
 
     private fun setupUi() {

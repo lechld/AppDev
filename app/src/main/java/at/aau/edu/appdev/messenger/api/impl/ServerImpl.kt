@@ -5,6 +5,7 @@ import at.aau.edu.appdev.messenger.api.MessageReceiver
 import at.aau.edu.appdev.messenger.api.MessageSender
 import at.aau.edu.appdev.messenger.api.Server
 import at.aau.edu.appdev.messenger.api.model.ServerConnection
+import at.aau.edu.appdev.messenger.model.User
 import com.google.android.gms.nearby.connection.ConnectionInfo
 import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback
 import com.google.android.gms.nearby.connection.ConnectionResolution
@@ -12,10 +13,12 @@ import com.google.android.gms.nearby.connection.ConnectionsClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 internal class ServerImpl(
     private val connectionsClient: ConnectionsClient,
-    private val userIdentifier: String,
+    private val user: User?,
     private val applicationIdentifier: String = BuildConfig.APPLICATION_ID,
     private val messageDelegate: MessageDelegate = MessageDelegate(connectionsClient),
 ) : Server,
@@ -35,10 +38,15 @@ internal class ServerImpl(
         val connections = mutableListOf<ServerConnection>()
 
         connectionsClient.startAdvertising(
-            userIdentifier,
+            Json.encodeToString(user),
             applicationIdentifier,
             object : ConnectionLifecycleCallback() {
                 override fun onConnectionInitiated(endpointId: String, info: ConnectionInfo) {
+                    val jsonUser = info.endpointName
+                    val user = Json.decodeFromString<User>(jsonUser).copy(id = endpointId)
+
+                    connections.add(ServerConnection.Requested(endpointId, user))
+
                     // Always allow incoming connection
                     connectionsClient.acceptConnection(endpointId, messageDelegate)
                 }
@@ -46,9 +54,9 @@ internal class ServerImpl(
                 override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
                     val old = connections.first { it.endpointId == endpointId }
                     val new = if (result.status.isSuccess) {
-                        ServerConnection.Connected(endpointId, old.endpointName)
+                        ServerConnection.Connected(endpointId, old.user)
                     } else {
-                        ServerConnection.Failure(endpointId, old.endpointName)
+                        ServerConnection.Failure(endpointId, old.user)
                     }
 
                     connections.remove(old)
@@ -59,7 +67,7 @@ internal class ServerImpl(
 
                 override fun onDisconnected(endpointId: String) {
                     val old = connections.first { it.endpointId == endpointId }
-                    val new = ServerConnection.Failure(endpointId, old.endpointName)
+                    val new = ServerConnection.Failure(endpointId, old.user)
 
                     connections.remove(old)
                     connections.add(new)

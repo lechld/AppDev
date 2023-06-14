@@ -33,7 +33,7 @@ class RoomsAdapter(
         private val binding: ItemRoomBinding
     ) : ViewHolder(binding.root) {
         fun bind(connection: Connection) {
-            binding.root.text = connection.endpointName
+            binding.root.text = connection.user.name
         }
     }
 

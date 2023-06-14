@@ -10,16 +10,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
-import at.aau.edu.appdev.messenger.Environment
 import at.aau.edu.appdev.messenger.databinding.FragmentUserBinding
 import at.aau.edu.appdev.messenger.model.UserColor
+import at.aau.edu.appdev.messenger.persistence.UserRepository
 
 class UserFragment : Fragment() {
 
     private val viewModel by viewModels<UserViewModel> {
         viewModelFactory {
             initializer {
-                UserViewModel(Environment.getInstance(requireContext()).userRepository)
+                UserViewModel(UserRepository(requireContext()))
             }
         }
     }

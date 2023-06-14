@@ -14,9 +14,6 @@ class UserViewModel(
     private val _user = MutableLiveData<User>(userRepository.getUser())
     val user: LiveData<User> = _user
 
-    private val _colors = MutableLiveData(UserColor.values().toList())
-    val colors: LiveData<List<UserColor>> = _colors
-
     fun update(name: String, color: UserColor) {
         userRepository.saveUser(name, color)
     }

@@ -18,7 +18,7 @@ class ChatClientFragment : Fragment() {
         viewModelFactory {
             initializer {
                 ChatClientViewModel(
-                    Client.getInstance(requireContext(), UserRepository(requireContext()))
+                    Client.getInstance(requireContext(), UserRepository(requireContext()).getUser())
                 )
             }
         }

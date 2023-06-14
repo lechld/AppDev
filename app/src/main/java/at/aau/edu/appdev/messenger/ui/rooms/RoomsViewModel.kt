@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class RoomsViewModel(
-    client: Client?,
+    private val client: Client?,
 ) : ViewModel() {
 
     val rooms: LiveData<List<Connection>>? = client?.connections?.map {
@@ -24,6 +24,14 @@ class RoomsViewModel(
         viewModelScope.launch {
             updateJoke()
         }
+    }
+
+    fun startDiscovery() {
+        client?.startDiscovery()
+    }
+
+    fun stopDiscovery() {
+        client?.stopDiscovery()
     }
 
     private suspend fun updateJoke() {

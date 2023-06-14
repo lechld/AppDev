@@ -4,11 +4,16 @@ import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import at.aau.edu.appdev.messenger.api.Server
+import at.aau.edu.appdev.messenger.api.model.ClientConnection
+import at.aau.edu.appdev.messenger.api.model.ServerConnection
 import at.aau.edu.appdev.messenger.model.Message
+import at.aau.edu.appdev.messenger.model.MessageEvent
 import at.aau.edu.appdev.messenger.model.User
 import at.aau.edu.appdev.messenger.model.UserColor
 import at.aau.edu.appdev.messenger.persistence.UserRepository
+import kotlinx.coroutines.launch
 import java.time.OffsetDateTime
 import java.util.UUID
 
@@ -23,6 +28,18 @@ class ChatServerViewModel(
     init {
         // TODO: Remove
         _messages.postValue(getDummyData(userRepository.enforceUser()))
+
+        viewModelScope.launch {
+            server.messages
+        }
+    }
+
+    fun startBroadcasting() {
+        server.startBroadcasting()
+    }
+
+    fun stopBroadcasting() {
+        server.stopBroadcasting()
     }
 
     fun sendMessage(bitmap: Bitmap?, text: String?) {

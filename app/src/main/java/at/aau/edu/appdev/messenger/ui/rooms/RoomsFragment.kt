@@ -9,16 +9,22 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
-import at.aau.edu.appdev.messenger.Environment
 import at.aau.edu.appdev.messenger.R
+import at.aau.edu.appdev.messenger.api.Client
 import at.aau.edu.appdev.messenger.databinding.FragmentRoomBinding
+import at.aau.edu.appdev.messenger.persistence.UserRepository
 
 class RoomsFragment : Fragment() {
 
     private val viewModel by viewModels<RoomsViewModel> {
         viewModelFactory {
             initializer {
-                RoomsViewModel(Environment.getInstance(requireContext()).client)
+                RoomsViewModel(
+                    Client.getInstance(
+                        context = requireContext(),
+                        user = UserRepository(requireContext()).getUser()
+                    )
+                )
             }
         }
     }
@@ -39,10 +45,12 @@ class RoomsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupUi()
+        viewModel.startDiscovery()
     }
 
     override fun onDestroyView() {
         binding = null
+        viewModel.stopDiscovery()
         super.onDestroyView()
     }
 
@@ -67,7 +75,7 @@ class RoomsFragment : Fragment() {
 
         binding.animation.playAnimation()
 
-        viewModel.jokes.observe(viewLifecycleOwner){ joke ->
+        viewModel.jokes.observe(viewLifecycleOwner) { joke ->
             binding.joke.text = joke
         }
     }

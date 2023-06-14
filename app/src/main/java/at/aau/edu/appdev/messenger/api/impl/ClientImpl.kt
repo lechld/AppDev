@@ -5,13 +5,16 @@ import at.aau.edu.appdev.messenger.api.Client
 import at.aau.edu.appdev.messenger.api.MessageReceiver
 import at.aau.edu.appdev.messenger.api.MessageSender
 import at.aau.edu.appdev.messenger.api.model.ClientConnection
+import at.aau.edu.appdev.messenger.model.User
 import com.google.android.gms.nearby.connection.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 internal class ClientImpl(
     private val connectionsClient: ConnectionsClient,
-    private val userIdentifier: String,
+    private val userIdentifier: User?,
     private val applicationIdentifier: String = BuildConfig.APPLICATION_ID,
     private val messageDelegate: MessageDelegate = MessageDelegate(connectionsClient),
 ) : Client,
@@ -37,7 +40,10 @@ internal class ClientImpl(
                     endpointId: String,
                     endpointInfo: DiscoveredEndpointInfo
                 ) {
-                    connections.add(ClientConnection.Found(endpointId, endpointInfo.endpointName))
+                    val jsonUser = endpointInfo.endpointName
+                    val user = Json.decodeFromString<User>(jsonUser).copy(id = endpointId)
+
+                    connections.add(ClientConnection.Found(endpointId, user))
 
                     _connections.tryEmit(connections)
                 }
@@ -59,7 +65,7 @@ internal class ClientImpl(
 
     override fun connect(connection: ClientConnection) {
         connectionsClient.requestConnection(
-            userIdentifier,
+            Json.encodeToString(userIdentifier),
             connection.endpointId,
             object : ConnectionLifecycleCallback() {
                 override fun onConnectionInitiated(endpointId: String, info: ConnectionInfo) {
@@ -71,9 +77,9 @@ internal class ClientImpl(
                     val connections = connectionsSync().toMutableList()
                     val old = connections.first { it.endpointId == endpointId }
                     val new = if (result.status.isSuccess) {
-                        ClientConnection.Connected(endpointId, old.endpointName)
+                        ClientConnection.Connected(endpointId, old.user)
                     } else {
-                        ClientConnection.Failure(endpointId, old.endpointName)
+                        ClientConnection.Failure(endpointId, old.user)
                     }
 
                     connections.remove(old)
@@ -85,7 +91,7 @@ internal class ClientImpl(
                 override fun onDisconnected(endpointId: String) {
                     val connections = _connections.value.toMutableList()
                     val old = connections.first { it.endpointId == endpointId }
-                    val new = ClientConnection.Failure(endpointId, old.endpointName)
+                    val new = ClientConnection.Failure(endpointId, old.user)
 
                     connections.remove(old)
                     connections.add(new)
