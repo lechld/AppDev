@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class RoomsViewModel(
-    client: Client,
+    client: Client?,
 ) : ViewModel() {
 
-    val rooms: LiveData<List<Connection>> = client.connections.map {
+    val rooms: LiveData<List<Connection>>? = client?.connections?.map {
         it.filterIsInstance<ClientConnection.Found>()
-    }.asLiveData()
+    }?.asLiveData()
 
     private val _jokes = MutableLiveData<String>()
     val jokes: LiveData<String> = _jokes.distinctUntilChanged()

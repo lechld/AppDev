@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -81,6 +82,9 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
+    // https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-json/kotlinx.serialization.json/-json-encoder/
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1"
+
     // https://developer.android.com/jetpack/androidx/releases/arch-core
     testImplementation 'androidx.arch.core:core-testing:2.2.0'
 
@@ -92,6 +96,4 @@ dependencies {
 
     // https://developer.android.com/jetpack/androidx/releases/lifecycle
     testImplementation 'androidx.lifecycle:lifecycle-runtime-testing:2.6.1'
-
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 }

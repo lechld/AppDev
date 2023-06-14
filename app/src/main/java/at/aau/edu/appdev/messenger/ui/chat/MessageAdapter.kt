@@ -10,8 +10,7 @@ import at.aau.edu.appdev.messenger.databinding.ItemDrawingBinding
 import at.aau.edu.appdev.messenger.databinding.ItemMessageBinding
 import at.aau.edu.appdev.messenger.model.Message
 
-class MessageAdapter(private val context: Context) :
-    ListAdapter<Message, MessageViewHolder>(Differ()) {
+class MessageAdapter : ListAdapter<Message, MessageViewHolder>(Differ()) {
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
@@ -31,13 +30,13 @@ class MessageAdapter(private val context: Context) :
             R.layout.item_message -> {
                 val binding = ItemMessageBinding.inflate(inflater, parent, false)
 
-                MessageViewHolder.TextViewHolder(binding, context)
+                MessageViewHolder.TextViewHolder(binding)
             }
 
             R.layout.item_drawing -> {
                 val binding = ItemDrawingBinding.inflate(inflater, parent, false)
 
-                MessageViewHolder.DrawingViewHolder(binding, context)
+                MessageViewHolder.DrawingViewHolder(binding)
             }
 
             else -> throw IllegalStateException("invalid view type!")

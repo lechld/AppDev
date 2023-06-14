@@ -19,7 +19,8 @@ interface Client : MessageSender, MessageReceiver {
     companion object {
         private var instance: Client? = null
 
-        fun getInstance(context: Context, userRepository: UserRepository): Client {
+        fun getInstance(context: Context, userRepository: UserRepository): Client? {
+            val userName = userRepository.getUser()?.name ?: return null
             val instance = instance
 
             if (instance != null) {
@@ -28,7 +29,7 @@ interface Client : MessageSender, MessageReceiver {
 
             val newInstance = ClientImpl(
                 connectionsClient = Nearby.getConnectionsClient(context),
-                userIdentifier = userRepository.enforceUser().name
+                userIdentifier = userName
             )
 
             Companion.instance = newInstance
