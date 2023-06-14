@@ -27,7 +27,17 @@ class ChatServerViewModel(
                 if (messageEvent is MessageEvent.Content) {
                     val connections = server.getConnectionsSync()
                         .filterIsInstance(ServerConnection.Connected::class.java)
-                        .filter { it.user != messageEvent.message.sender }
+                        /**
+                         * TODO: That's hack, other users with same name won't see the message!
+                         *
+                         * Options to solve:
+                         * - Handshake like mechanism - Exchange data at least the server side needs.
+                         * - Add field `endpointId` to user, don't update id like we do now.
+                         * - Rethink connection protocol
+                         *
+                         * Currently it's not worth to do for a throw away project.
+                         */
+                        .filter { it.user.name != messageEvent.message.sender.name }
 
                     connections.forEach { connection ->
                         server.send(connection, messageEvent)

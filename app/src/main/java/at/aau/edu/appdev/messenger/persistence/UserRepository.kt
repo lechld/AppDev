@@ -23,10 +23,6 @@ class UserRepository(context: Context) {
         return User(id, name, color)
     }
 
-    fun enforceUser(): User {
-        return getUser() ?: throw IllegalStateException("User must be given!")
-    }
-
     fun saveUser(name: String, color: UserColor) {
         val id = prefs.getString(USER_ID_KEY, UUID.randomUUID().toString())
 
