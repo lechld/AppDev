@@ -5,6 +5,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import at.aau.edu.appdev.messenger.R
 import at.aau.edu.appdev.messenger.databinding.FragmentChatBinding
+import at.aau.edu.appdev.messenger.model.MessageEvent
 
 class ChatFragmentDelegate(
     private val binding: FragmentChatBinding,
@@ -22,7 +23,10 @@ class ChatFragmentDelegate(
 
         binding.recycler.adapter = adapter
 
-        viewModel.messages.observe(viewLifecycleOwner) { messages ->
+        viewModel.events.observe(viewLifecycleOwner) { events ->
+            val messages = events.filterIsInstance(MessageEvent.Content::class.java)
+                .map { it.message }
+
             adapter.submitList(messages) {
                 binding.recycler.smoothScrollToPosition(messages.size)
             }

@@ -4,8 +4,9 @@ import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import at.aau.edu.appdev.messenger.api.MessageSender
 import at.aau.edu.appdev.messenger.model.Message
+import at.aau.edu.appdev.messenger.model.MessageEvent
 import at.aau.edu.appdev.messenger.model.User
 import at.aau.edu.appdev.messenger.model.UserColor
 import at.aau.edu.appdev.messenger.persistence.UserRepository
@@ -16,13 +17,8 @@ abstract class ChatFragmentViewModel(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
-    private val _messages = MutableLiveData<List<Message>>()
-    val messages: LiveData<List<Message>> = _messages
-
-    init {
-        // TODO: Remove
-        _messages.postValue(getDummyData(userRepository.enforceUser()))
-    }
+    private val _events = MutableLiveData<List<MessageEvent>>()
+    val events: LiveData<List<MessageEvent>> = _events
 
     fun sendMessage(bitmap: Bitmap?, text: String?) {
         val user = userRepository.enforceUser()
@@ -50,15 +46,10 @@ abstract class ChatFragmentViewModel(
             )
         }
 
-        val currentMessages = messages.value ?: emptyList()
-        val newMessages = mutableListOf<Message>()
+        val event = MessageEvent.Content(message)
 
-        newMessages.addAll(currentMessages)
-        newMessages.add(message)
-
-        // TODO: Send via server to other users
-
-        _messages.postValue(newMessages)
+        addEvent(event)
+        sendEvent(event)
     }
 
     private fun resizeBitmap(bitmap: Bitmap): Bitmap {
@@ -71,41 +62,15 @@ abstract class ChatFragmentViewModel(
         )
     }
 
-    private fun getDummyData(user1: User): List<Message> {
-        val user2 = User("Emily", "user2", UserColor.VIOLET)
+    protected fun addEvent(event: MessageEvent) {
+        val current = _events.value ?: emptyList()
+        val new = mutableListOf<MessageEvent>()
 
-        return listOf(
-            Message.Text(
-                user1,
-                OffsetDateTime.parse("2023-06-13T10:00:00Z"),
-                "1",
-                "Hello"
-            ),
-            Message.Text(
-                user2,
-                OffsetDateTime.parse("2023-06-13T10:02:00Z"),
-                "2",
-                "Hi John, how are you?"
-            ),
-            Message.Text(
-                user1,
-                OffsetDateTime.parse("2023-06-13T10:05:00Z"),
-                "3",
-                "I'm good, thanks! How about you?"
-            ),
-            Message.Text(
-                user2,
-                OffsetDateTime.parse("2023-06-13T10:07:00Z"),
-                "4",
-                "I'm doing well too."
-            ),
-            Message.Text(
-                user1,
-                OffsetDateTime.parse("2023-06-13T10:10:00Z"),
-                "5",
-                "That's great to hear!"
-            )
-        )
+        new.addAll(current)
+        new.add(event)
+
+        _events.postValue(new)
     }
 
+    abstract fun sendEvent(event: MessageEvent)
 }
