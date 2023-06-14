@@ -2,11 +2,13 @@ package at.aau.edu.appdev.messenger.ui.rooms
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import at.aau.edu.appdev.messenger.api.model.Connection
 import at.aau.edu.appdev.messenger.databinding.ItemRoomBinding
+import at.aau.edu.appdev.messenger.persistence.UserRepository
 
 class RoomsAdapter(
     private val onClick: (Connection) -> Unit,
@@ -33,7 +35,11 @@ class RoomsAdapter(
         private val binding: ItemRoomBinding
     ) : ViewHolder(binding.root) {
         fun bind(connection: Connection) {
-            binding.root.text = connection.user.name
+            binding.content.text = connection.user.name
+            binding.contentContainerContainer.background = AppCompatResources.getDrawable(
+                binding.root.context, UserRepository(binding.root.context).getUser()?.color?.primary
+                    ?: return
+            )
         }
     }
 
