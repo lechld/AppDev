@@ -62,7 +62,7 @@ class ChatServerFragment : Fragment() {
 
     private fun setupUi() {
         val binding = this.binding ?: return
-        val adapter = MessageAdapter()
+        val adapter = MessageAdapter(this.context ?: return)
 
         binding.recycler.adapter = adapter
 
